@@ -1,0 +1,97 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Authenticated user profile in StudyFlow",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "photoURL": { "type": "string", "maxLength": 1024 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "Student to-do task item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "description": { "type": "string", "maxLength": 2048 },
+        "date": { "type": "string", "maxLength": 32 },
+        "time": { "type": "string", "maxLength": 16 },
+        "completed": { "type": "boolean" },
+        "completedAt": { "type": "string", "maxLength": 64 },
+        "emoji": { "type": "string", "maxLength": 16 },
+        "iconName": { "type": "string", "maxLength": 64 },
+        "bgColor": { "type": "string", "maxLength": 32 },
+        "accentColor": { "type": "string", "maxLength": 32 },
+        "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+        "category": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "userId", "title", "date", "completed"]
+    },
+    "PlannerItem": {
+      "title": "PlannerItem",
+      "description": "Student daily schedule and lecture block",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "subject": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 32 },
+        "startTime": { "type": "string", "maxLength": 16 },
+        "endTime": { "type": "string", "maxLength": 16 },
+        "location": { "type": "string", "maxLength": 256 },
+        "notes": { "type": "string", "maxLength": 2048 },
+        "color": { "type": "string", "maxLength": 32 },
+        "completed": { "type": "boolean" }
+      },
+      "required": ["id", "userId", "title", "subject", "date", "startTime", "endTime"]
+    },
+    "UserSettings": {
+      "title": "UserSettings",
+      "description": "Student preference and focus statistics",
+      "type": "object",
+      "properties": {
+        "theme": { "type": "string", "enum": ["light", "midnight", "cream"] },
+        "soundEnabled": { "type": "boolean" },
+        "soundVolume": { "type": "number" },
+        "clockFormat": { "type": "string", "enum": ["12h", "24h"] },
+        "showClockSeconds": { "type": "boolean" },
+        "defaultFocusDuration": { "type": "number" },
+        "totalFocusMinutesCompleted": { "type": "number" },
+        "completedTasksCount": { "type": "number" },
+        "streakDays": { "type": "number" },
+        "lastActiveDate": { "type": "string", "maxLength": 32 },
+        "preferredHandle": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["theme", "soundEnabled"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile document"
+    },
+    "/users/{userId}/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "User private tasks subcollection"
+    },
+    "/users/{userId}/planner/{plannerId}": {
+      "schema": "PlannerItem",
+      "description": "User private study schedule blocks subcollection"
+    },
+    "/users/{userId}/settings/{settingId}": {
+      "schema": "UserSettings",
+      "description": "User preferences and sync state"
+    }
+  }
+}

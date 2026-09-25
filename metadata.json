@@ -1,0 +1,6 @@
+{
+  "name": "StudyFlow - Personal Student Planner & Focus",
+  "description": "Premium student productivity dashboard featuring intuitive task planning, study schedules, customizable focus timer, and precision analog clock.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

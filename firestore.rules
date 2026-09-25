@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // User profile document & private data
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      // Tasks subcollection
+      match /tasks/{taskId} {
+        allow get, list: if isOwner(userId);
+        allow create, update, delete: if isOwner(userId) && isValidId(taskId);
+      }
+
+      // Planner schedule subcollection
+      match /planner/{plannerId} {
+        allow get, list: if isOwner(userId);
+        allow create, update, delete: if isOwner(userId) && isValidId(plannerId);
+      }
+
+      // Settings subcollection
+      match /settings/{settingId} {
+        allow get, list: if isOwner(userId);
+        allow create, update, delete: if isOwner(userId) && isValidId(settingId);
+      }
+    }
+  }
+}
